@@ -127,50 +127,6 @@ public class GeneralCommands {
         }
     }
     
-    @Command(aliases = {"heal"}, usage = "[player]", desc = "Heal a player", flags = "s", max = 1)
-    public void heal(CommandContext args, Actor sender) throws CommandException, AuthorizationException {
-
-        Iterable<? extends LocalPlayer> targets = null;
-        boolean included = false;
-        
-        // Detect arguments based on the number of arguments provided
-        if (args.argsLength() == 0) {
-            targets = worldGuard.getPlatform().getMatcher().matchPlayers(worldGuard.checkPlayer(sender));
-            
-            // Check permissions!
-            sender.checkPermission("worldguard.heal");
-        } else if (args.argsLength() == 1) {            
-            targets = worldGuard.getPlatform().getMatcher().matchPlayers(sender, args.getString(0));
-            
-            // Check permissions!
-            sender.checkPermission("worldguard.heal.other");
-        }
-
-        for (LocalPlayer player : targets) {
-            player.setHealth(player.getMaxHealth());
-            player.setFoodLevel(20);
-            player.setSaturation(20);
-            player.setExhaustion(0);
-            
-            // Tell the user
-            if (player.equals(sender)) {
-                player.print("Healed!");
-                
-                // Keep track of this
-                included = true;
-            } else {
-                player.print("Healed by " + sender.getDisplayName() + ".");
-                
-            }
-        }
-        
-        // The player didn't receive any items, then we need to send the
-        // user a message so s/he know that something is indeed working
-        if (!included && args.hasFlag('s')) {
-            sender.print("Players healed.");
-        }
-    }
-    
     @Command(aliases = {"slay"}, usage = "[player]", desc = "Slay a player", flags = "s", max = 1)
     public void slay(CommandContext args, Actor sender) throws CommandException, AuthorizationException {
         
